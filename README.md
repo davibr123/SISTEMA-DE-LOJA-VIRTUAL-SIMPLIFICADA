@@ -1,2 +1,46 @@
 # SISTEMA-DE-LOJA-VIRTUAL-SIMPLIFICADA
-Desenvolver um sistema de linha de comando (CLI) ou API mínima (FastAPI/Flask, opcional) para uma loja virtual: cadastro de produtos e clientes, carrinho, pedido, pagamento, cálculo de frete, emissão de nota/sumário de compra e relatórios de vendas.
+
+## Descrição
+Projeto da disciplina de Programação Orientada a Objetos (Tema 9). 
+Sistema de linha de comando (CLI) para gerenciar uma loja virtual: 
+cadastro de produtos e clientes, carrinho, pedidos, pagamento, 
+cálculo de frete e relatórios de vendas.
+
+### Classes
+
+Produto
+- O que é: um item vendido na loja
+- Principais dados: sku, nome, preço, estoque
+
+Cliente
+- O que é: quem compra
+- Principais dados: nome, email, cpf, endereço
+
+Endereco
+- O que é: endereço de entrega do cliente
+
+Carrinho
+- O que é: lista de produtos que o cliente quer comprar, antes de virar pedido
+
+Pedido
+- O que é: a compra "fechada" (depois que sai do carrinho)
+- Tem um status: CRIADO → PAGO → ENVIADO → ENTREGUE (ou CANCELADO)
+
+Pagamento
+- O que é: o registro de que o pedido foi pago
+
+Cupom
+- O que é: desconto que pode ser aplicado no pedido
+
+Frete
+- O que é: calcula quanto custa e quanto demora a entrega
+
+### Como se conectam
+
+- Cliente tem um Endereco
+- Cliente monta um Carrinho
+- Carrinho tem vários Produtos dentro
+- Carrinho vira um Pedido
+- Pedido pertence a um Cliente
+- Pedido pode usar um Cupom (opcional)
+- Pedido tem um Pagamento e um Frete
