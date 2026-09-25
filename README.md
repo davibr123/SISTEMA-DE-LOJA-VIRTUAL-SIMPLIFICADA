@@ -1,8 +1,11 @@
 # SISTEMA-DE-LOJA-VIRTUAL-SIMPLIFICADA
 
 ## Descrição
-Projeto da disciplina de Programação Orientada a Objetos (Tema 9). 
-Sistema de linha de comando (CLI) para gerenciar uma loja virtual: 
+Projeto da disciplina de Programação Orientada a Objetos (Tema 9).
+
+## Objetivo
+Praticar modelagem orientada a objetos (herança, encapsulamento, composição) 
+construindo um sistema de linha de comando (CLI) para gerenciar uma loja virtual: 
 cadastro de produtos e clientes, carrinho, pedidos, pagamento, 
 cálculo de frete e relatórios de vendas.
 
@@ -44,3 +47,13 @@ Frete
 - Pedido pertence a um Cliente
 - Pedido pode usar um Cupom (opcional)
 - Pedido tem um Pagamento e um Frete
+
+### Métodos principais (previstos)
+
+- Produto: comparar por SKU, comparar por preço
+- Cliente: comparar por CPF/email
+- Carrinho: adicionar item, remover item, calcular subtotal
+- Pedido: fechar pedido, cancelar, gerar resumo
+- Pagamento: validar se o valor pago cobre o total
+- Cupom: validar se ainda é válido (data, uso)
+- Frete: calcular valor e prazo
