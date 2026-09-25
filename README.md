@@ -57,3 +57,55 @@ Frete
 - Pagamento: validar se o valor pago cobre o total
 - Cupom: validar se ainda é válido (data, uso)
 - Frete: calcular valor e prazo
+
+## Diagrama (UML)
+
+```mermaid
+classDiagram
+    direction TB
+
+    Cliente --> Endereco
+    Cliente --> Carrinho
+    Carrinho --> Produto
+    Carrinho --> Pedido
+    Pedido --> Cupom
+    Pedido --> Pagamento
+    Pedido --> Frete
+
+    class Cliente {
+        nome
+        email
+        cpf
+    }
+    class Endereco {
+        cep
+        cidade
+        uf
+    }
+    class Carrinho {
+        itens
+    }
+    class Produto {
+        sku
+        nome
+        preco
+        estoque
+    }
+    class Pedido {
+        status
+        total
+    }
+    class Cupom {
+        codigo
+        tipo
+    }
+    class Pagamento {
+        forma
+        valor
+    }
+    class Frete {
+        valor
+        prazo
+    }
+
+    classDef default fill:#1e1e2e,stroke:#8899aa,stroke-width:1px,color:#e0e0e0
