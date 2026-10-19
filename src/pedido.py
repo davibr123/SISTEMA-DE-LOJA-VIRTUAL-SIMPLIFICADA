@@ -2,8 +2,7 @@ from datetime import date
 
 class Pedido:
     """Representa um pedido gerado a partir do carrinho (itens, frete, desconto, status)."""
-    pass
-
+    
     STATUS_VALIDOS = ["CRIADO", "PAGO", "ENVIADO", "ENTREGUE", "CANCELADO"]
 
     def __init__(self, id, cliente, itens, frete, cupom=None):
