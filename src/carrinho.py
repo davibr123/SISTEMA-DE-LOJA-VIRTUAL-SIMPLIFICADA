@@ -29,6 +29,8 @@ class Carrinho:
         """Transforma o carrinho em um Pedido."""
         if len(self.itens) == 0:
             raise ValueError("Carrinho vazio")
+        if len(self.cliente.enderecos) == 0:
+            raise ValueError("Cliente precisa ter um endereço para fechar o pedido")
 
         itens_pedido = []
         for item in self.itens:
@@ -36,10 +38,13 @@ class Carrinho:
                 raise ValueError(f"Estoque insuficiente para {item.produto.nome}")
             itens_pedido.append(ItemPedido(item.produto, item.quantidade, item.produto.preco))
 
-        return Pedido(id, self.cliente, itens_pedido, frete, cupom)
-    
-    def __len__(self):
-        return sum(item.quantidade for item in self.itens)
+        if cupom:
+            if not cupom.valido():
+                raise ValueError("Cupom expirado ou sem usos disponíveis")
+            if not any(cupom.aplica_a(item.produto.categoria) for item in self.itens):
+                raise ValueError("Cupom não vale para nenhum item do carrinho")
 
-    def __str__(self):
-        return f"Carrinho de {self.cliente.nome} ({len(self)} itens) - R${self.subtotal():.2f}"
+        pedido = Pedido(id, self.cliente, itens_pedido, frete, cupom)
+        if cupom:
+            cupom.usar()
+        return pedido

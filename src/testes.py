@@ -5,6 +5,7 @@ from cliente import Cliente
 from carrinho import Carrinho
 from frete import Frete
 from cupom import Cupom
+from endereco import Endereco
 from pagamento import Pagamento
 from dados import salvar_produtos, carregar_produtos, salvar_pedidos
 from relatorio import pedidos_por_periodo
@@ -19,6 +20,7 @@ print(carregar_produtos())
 
 # Carrinho -> Pedido
 cliente = Cliente("1", "Davi", "davi@email.com", "12345678900")
+cliente.enderecos.append(Endereco("63101-240", "Crato", "CE"))
 carrinho = Carrinho(cliente)
 carrinho.adicionar_item(mouse, 2)
 carrinho.adicionar_item(ebook, 1)
@@ -34,3 +36,4 @@ print(pedido)
 # Persistência de pedidos e relatório
 salvar_pedidos([pedido])
 pedidos_por_periodo("2026-01-01", "2030-12-31")
+print(pedido.gerar_resumo())

@@ -1,6 +1,8 @@
 class Produto:
     """Representa um produto do catálogo da loja (SKU, nome, categoria, preço, estoque)."""
-   
+
+    gera_frete = True
+
     def __init__(self, sku, nome, categoria, preco, estoque, ativo=True):
         self.sku = sku
         self.nome = nome

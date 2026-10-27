@@ -25,15 +25,21 @@ class Cupom:
             raise ValueError(f"Tipo inválido. Use: {self.TIPOS_VALIDOS}")
         self._tipo = valor
 
-    def valido(self, categoria=None):
-        """Verifica se o cupom ainda pode ser usado."""
+    def valido(self):
+        """Verifica se o cupom ainda pode ser usado (data e uso máximo)."""
         if date.today() > self.data_validade:
             return False
         if self.usos >= self.uso_maximo:
             return False
-        if self.categorias_elegiveis and categoria not in self.categorias_elegiveis:
-            return False
         return True
+
+    def aplica_a(self, categoria):
+        """Verifica se o cupom vale para a categoria (lista vazia = todas)."""
+        return not self.categorias_elegiveis or categoria in self.categorias_elegiveis
+
+    def usar(self):
+        """Conta mais um uso do cupom."""
+        self.usos += 1
 
     def calcular_desconto(self, subtotal):
         """Calcula o valor de desconto a aplicar sobre um subtotal."""
