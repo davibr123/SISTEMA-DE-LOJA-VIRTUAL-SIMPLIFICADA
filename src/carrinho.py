@@ -2,6 +2,7 @@ from item_carrinho import ItemCarrinho
 from item_pedido import ItemPedido
 from pedido import Pedido
 
+
 class Carrinho:
     """Representa o carrinho de compras de um cliente, com itens (produto + quantidade)."""
 
@@ -20,6 +21,14 @@ class Carrinho:
     def remover_item(self, produto):
         """Remove um produto do carrinho."""
         self.itens = [item for item in self.itens if item.produto != produto]
+
+    def alterar_quantidade(self, produto, quantidade):
+        """Muda a quantidade de um produto que já está no carrinho."""
+        for item in self.itens:
+            if item.produto == produto:
+                item.quantidade = quantidade
+                return
+        raise ValueError("Produto não está no carrinho")
 
     def subtotal(self):
         """Soma o subtotal de todos os itens do carrinho."""
@@ -48,3 +57,9 @@ class Carrinho:
         if cupom:
             cupom.usar()
         return pedido
+
+    def __len__(self):
+        return sum(item.quantidade for item in self.itens)
+
+    def __str__(self):
+        return f"Carrinho de {self.cliente.nome} ({len(self)} itens) - R${self.subtotal():.2f}"

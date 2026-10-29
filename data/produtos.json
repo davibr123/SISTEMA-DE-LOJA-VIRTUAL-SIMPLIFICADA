@@ -3,17 +3,29 @@
     "sku": "SKU001",
     "nome": "Mouse gamer",
     "categoria": "Periféricos",
-    "_preco": 140.0,
-    "_estoque": 10,
+    "preco": 140.0,
+    "estoque": 20,
     "ativo": true,
-    "_peso": 0.2
+    "tipo": "fisico",
+    "peso": 0.2
   },
   {
     "sku": "SKU002",
-    "nome": "Teclado gamer",
+    "nome": "Teclado mecânico",
     "categoria": "Periféricos",
-    "_preco": 120.0,
-    "_estoque": 100,
-    "ativo": true
+    "preco": 250.0,
+    "estoque": 15,
+    "ativo": true,
+    "tipo": "fisico",
+    "peso": 0.9
+  },
+  {
+    "sku": "SKU003",
+    "nome": "Curso de Python",
+    "categoria": "Cursos",
+    "preco": 99.0,
+    "estoque": 999,
+    "ativo": true,
+    "tipo": "digital"
   }
 ]

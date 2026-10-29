@@ -1,0 +1,22 @@
+[
+  {
+    "codigo": "DESC10",
+    "tipo": "PERCENTUAL",
+    "valor": 10,
+    "data_validade": "2030-12-31",
+    "uso_maximo": 100,
+    "categorias": [],
+    "usos": 0
+  },
+  {
+    "codigo": "CURSO20",
+    "tipo": "VALOR",
+    "valor": 20,
+    "data_validade": "2030-12-31",
+    "uso_maximo": 50,
+    "categorias": [
+      "Cursos"
+    ],
+    "usos": 0
+  }
+]
