@@ -127,15 +127,29 @@ def carregar_pedidos():
 
 
 def salvar_pedidos(pedidos):
-    """Salva o resumo dos pedidos. Os pedidos de execuções anteriores continuam no arquivo."""
+    """Salva o resumo dos pedidos (com os itens). Os pedidos de execuções anteriores continuam no arquivo."""
     salvos = carregar_pedidos()
     for p in pedidos:
+        itens = []
+        for item in p.itens:
+            itens.append({
+                "sku": item.produto.sku,
+                "nome": item.produto.nome,
+                "categoria": item.produto.categoria,
+                "quantidade": item.quantidade,
+                "preco": item.preco_na_data,
+            })
+        uf = ""
+        if p.endereco is not None:
+            uf = p.endereco.uf
         resumo = {
             "id": p.id,
             "cliente": p.cliente.nome,
             "data": str(p.data),
             "status": p.status,
             "total": p.total(),
+            "uf": uf,
+            "itens": itens,
         }
         # se o pedido já estava no arquivo, troca pelo resumo novo; se não, adiciona
         achou = False

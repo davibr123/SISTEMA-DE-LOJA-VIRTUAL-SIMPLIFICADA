@@ -4,7 +4,7 @@ import os
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
 import pytest
-from datetime import date
+from datetime import date, datetime, timedelta
 from produto_fisico import ProdutoFisico
 from produto_digital import ProdutoDigital
 from produto_hibrido import ProdutoHibrido
@@ -170,3 +170,74 @@ def test_pedido_sem_endereco():
     carrinho.adicionar_item(criar_mouse(), 1)
     with pytest.raises(ValueError):
         carrinho.fechar_pedido(1, Frete("CE"))
+
+
+def test_endereco_cep_invalido():
+    with pytest.raises(ValueError):
+        Endereco("123", "Crato", "CE")
+
+
+def test_endereco_cidade_vazia():
+    with pytest.raises(ValueError):
+        Endereco("63100-000", "  ", "CE")
+
+
+# ---------- regras novas da entrega final ----------
+
+def test_entrada_estoque():
+    mouse = criar_mouse()
+    mouse.entrada_estoque(5)
+    assert mouse.estoque == 15
+
+
+def test_entrada_estoque_invalida():
+    with pytest.raises(ValueError):
+        criar_mouse().entrada_estoque(0)
+
+
+def test_produto_inativo_nao_vai_para_o_carrinho():
+    mouse = criar_mouse()
+    mouse.ativo = False
+    with pytest.raises(ValueError):
+        Carrinho(criar_cliente()).adicionar_item(mouse, 1)
+
+
+def test_cancelar_pedido_criado_a_qualquer_momento():
+    pedido = criar_pedido(criar_mouse())
+    pedido.criado_em = datetime.now() - timedelta(hours=48)
+    pedido.cancelar()
+    assert pedido.status == "CANCELADO"
+
+
+def test_cancelar_pedido_pago_fora_da_janela():
+    pedido = criar_pedido(criar_mouse())
+    pedido.pagar(Pagamento("PIX", pedido.total()))
+    pedido.criado_em = datetime.now() - timedelta(hours=48)  # a janela padrão é de 24 horas
+    with pytest.raises(ValueError):
+        pedido.cancelar()
+
+
+def test_frete_por_cidade():
+    assert Frete("CE", "Juazeiro do Norte").valor == 10.0  # tem regra própria no settings.json
+    assert Frete("CE", "Crato").valor == 15.0  # sem regra de cidade, usa a da UF
+
+
+def test_cupom_valor_invalido():
+    with pytest.raises(ValueError):
+        Cupom("ZERO", "VALOR", 0, date(2099, 12, 31), 5)
+
+
+def test_cupom_percentual_acima_de_100():
+    with pytest.raises(ValueError):
+        Cupom("DEMAIS", "PERCENTUAL", 150, date(2099, 12, 31), 5)
+
+
+def test_pedido_com_endereco_escolhido():
+    cliente = criar_cliente()
+    outro = Endereco("63048-000", "Juazeiro do Norte", "CE")
+    cliente.enderecos.append(outro)
+    carrinho = Carrinho(cliente)
+    carrinho.adicionar_item(criar_mouse(), 1)
+    pedido = carrinho.fechar_pedido(1, Frete("CE", "Juazeiro do Norte"), None, outro)
+    assert pedido.endereco is outro
+    assert pedido.total() == 110.0  # 100 do mouse + 10 de frete de Juazeiro

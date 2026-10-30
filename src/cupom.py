@@ -25,6 +25,28 @@ class Cupom:
             raise ValueError(f"Tipo inválido. Use: {self.TIPOS_VALIDOS}")
         self._tipo = valor
 
+    @property
+    def valor(self):
+        return self._valor
+
+    @valor.setter
+    def valor(self, quantia):
+        if quantia <= 0:
+            raise ValueError("O valor do cupom deve ser maior que zero")
+        if self.tipo == "PERCENTUAL" and quantia > 100:
+            raise ValueError("Cupom percentual não pode passar de 100%")
+        self._valor = quantia
+
+    @property
+    def uso_maximo(self):
+        return self._uso_maximo
+
+    @uso_maximo.setter
+    def uso_maximo(self, quantidade):
+        if quantidade < 1:
+            raise ValueError("O uso máximo deve ser pelo menos 1")
+        self._uso_maximo = quantidade
+
     def valido(self):
         """Verifica se o cupom ainda pode ser usado (data e uso máximo)."""
         if date.today() > self.data_validade:

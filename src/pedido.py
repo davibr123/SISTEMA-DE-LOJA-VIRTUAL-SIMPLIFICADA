@@ -1,5 +1,6 @@
 import random
-from datetime import date
+from datetime import date, datetime
+from configuracao import carregar_settings
 
 
 class Pedido:
@@ -7,15 +8,19 @@ class Pedido:
 
     STATUS_VALIDOS = ["CRIADO", "PAGO", "ENVIADO", "ENTREGUE", "CANCELADO"]
 
-    def __init__(self, id, cliente, itens, frete, cupom=None):
+    def __init__(self, id, cliente, itens, frete, cupom=None, endereco=None):
         self.id = id
         self.cliente = cliente
         self.itens = itens
-        self.endereco = cliente.enderecos[0] if cliente.enderecos else None
+        # se nenhum endereço for escolhido, usa o primeiro do cliente
+        if endereco is None and len(cliente.enderecos) > 0:
+            endereco = cliente.enderecos[0]
+        self.endereco = endereco
         self.frete = frete
         self.cupom = cupom
         self.pagamentos = []
         self.status = "CRIADO"
+        self.criado_em = datetime.now()
         self.data = date.today()
         self._desconto = self._calcular_desconto()
         self.codigo_rastreio = None
@@ -90,11 +95,15 @@ class Pedido:
         self.status = "ENTREGUE"
 
     def cancelar(self):
-        """Cancela o pedido (só se CRIADO ou PAGO) e devolve o estoque se já estava pago."""
+        """Cancela o pedido. Pedido pago só pode ser cancelado dentro da janela de horas do settings.json."""
         if self.status not in ("CRIADO", "PAGO"):
             raise ValueError("Só é possível cancelar um pedido CRIADO ou PAGO")
         if self.status == "PAGO":
-            self.repor_estoque()
+            horas_passadas = (datetime.now() - self.criado_em).total_seconds() / 3600
+            janela = carregar_settings()["janela_cancelamento_horas"]
+            if horas_passadas > janela:
+                raise ValueError(f"A janela de cancelamento ({janela} horas) já passou")
+            self.repor_estoque()  # o estoque só tinha saído se o pedido estava pago
         self.status = "CANCELADO"
 
     def gerar_resumo(self):

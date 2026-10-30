@@ -31,6 +31,12 @@ class Produto:
             raise ValueError("Estoque não pode ser negativo")
         self._estoque = valor
 
+    def entrada_estoque(self, quantidade):
+        """Registra a chegada de mercadoria (compra do fornecedor) e aumenta o estoque."""
+        if quantidade < 1:
+            raise ValueError("A quantidade de entrada deve ser pelo menos 1")
+        self.estoque += quantidade
+
     def __str__(self):
         return f"{self.nome} (SKU: {self.sku}) - R${self.preco:.2f}"
 

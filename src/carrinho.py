@@ -12,6 +12,8 @@ class Carrinho:
 
     def adicionar_item(self, produto, quantidade):
         """Adiciona um produto ao carrinho, ou soma a quantidade se já existir."""
+        if not produto.ativo:
+            raise ValueError(f"{produto.nome} está inativo e não pode ser vendido")
         for item in self.itens:
             if item.produto == produto:
                 item.quantidade += quantidade
@@ -34,7 +36,7 @@ class Carrinho:
         """Soma o subtotal de todos os itens do carrinho."""
         return sum(item.subtotal for item in self.itens)
 
-    def fechar_pedido(self, id, frete, cupom=None):
+    def fechar_pedido(self, id, frete, cupom=None, endereco=None):
         """Transforma o carrinho em um Pedido."""
         if len(self.itens) == 0:
             raise ValueError("Carrinho vazio")
@@ -43,6 +45,8 @@ class Carrinho:
 
         itens_pedido = []
         for item in self.itens:
+            if not item.produto.ativo:
+                raise ValueError(f"{item.produto.nome} está inativo e não pode ser vendido")
             if item.quantidade > item.produto.estoque:
                 raise ValueError(f"Estoque insuficiente para {item.produto.nome}")
             itens_pedido.append(ItemPedido(item.produto, item.quantidade, item.produto.preco))
@@ -53,7 +57,7 @@ class Carrinho:
             if not any(cupom.aplica_a(item.produto.categoria) for item in self.itens):
                 raise ValueError("Cupom não vale para nenhum item do carrinho")
 
-        pedido = Pedido(id, self.cliente, itens_pedido, frete, cupom)
+        pedido = Pedido(id, self.cliente, itens_pedido, frete, cupom, endereco)
         if cupom:
             cupom.usar()
         return pedido
